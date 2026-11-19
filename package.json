@@ -1,0 +1,25 @@
+{
+  "name": "iperuranio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "iperuranio": "bin/iperuranio.mjs"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "lint": "oxlint --deny-warnings src bin test",
+    "check": "npm run lint && npm test"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "devDependencies": {
+    "oxlint": "1.94.0"
+  }
+}
