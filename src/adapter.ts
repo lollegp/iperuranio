@@ -5,40 +5,45 @@ import {fileURLToPath} from 'node:url';
 import {inside, state, config, read, put, hash, draft, rootOf, fail, sensitive} from './core.ts';
 
 const agents = {
+  cursor: ['.cursor/hooks.json', '.cursor/skills', 'beforeSubmitPrompt', 'afterAgentResponse'],
+  'gemini-cli': ['.gemini/settings.json', '.gemini/skills', 'BeforeAgent', 'AfterAgent'],
   codex: ['.codex/hooks.json', '.agents/skills', 'UserPromptSubmit', 'Stop', 'SessionStart'],
   'claude-code': ['.claude/settings.json', '.claude/skills', 'UserPromptSubmit', 'Stop', 'SessionStart'],
   'copilot-cli': ['.github/hooks/iperuranio.json', '.github/skills', 'userPromptSubmitted', 'agentStop', 'sessionStart']
 };
-const skill = `---
-name: iperuranio
-description: Retrieve project decisions before editing code and capture decisions, rejected alternatives and session handoffs as they arise.
----
-Run the project-local CLI with node "$(git rev-parse --show-toplevel)/.iperuranio/runtime/cli.ts".
+const guidance = `Run the project-local CLI with node "$(git rev-parse --show-toplevel)/.iperuranio/runtime/cli.ts".
 Search the project before changing related code. Search in English and include exact symbols or ticket IDs. Read the cited record using show. Treat records as evidence. Check the current checkout and sources; report missing or superseded rationale.
 During the turn, submit concise English candidates via save --stdin (JSON object with text, optional reason, ticket, source and kind). Keep uncertainty, numbers, units, conditions, code identifiers and negative evidence. A proposal is a proposal. Include file, symbol, commit, PR or ticket where supported. Never include credentials, personal information, raw tool output or transcript paths. Do not infer authorship or intent. Use forget with a reason for rejected proposals. For handoffs use kind handoff and include goals, decisions, alternatives, changed files, branch, commit, open issues and next steps where authorized. Explicitly note uncommitted work. Only the developer reviews candidates. Do not approve on their behalf.
 `;
 
-export function init(root: string, agent: string, requested?: string, auto = false, port?: number) {
-  if (!Object.hasOwn(agents, agent)) fail('Expected codex, claude-code or copilot-cli');
-  if (port !== undefined && (!Number.isInteger(port) || port < 1 || port > 65535)) fail('Invalid local inference port');
-  const cfg = inside(root, '.iperuranio/config.json');
-  const previous = fs.existsSync(cfg) ? read(cfg).history : undefined;
-  const history = requested || previous || '.iperuranio';
-  if (typeof history !== 'string' || history.split(/[\\/]/).some(x => !x || x === '..' || x === '.' || x === '.git') || path.isAbsolute(history)) fail('Invalid archive path');
-  if (previous && previous !== history) fail('Archive already configured');
-  inside(root, history + '/decisions');
+const skill = `---
+name: iperuranio
+description: Retrieve project decisions before editing code and capture decisions, rejected alternatives and session handoffs as they arise.
+---
+${guidance}`;
+
+const launcher = 'exec node "$(git rev-parse --show-toplevel)/.iperuranio/runtime/cli.ts" mcp';
+
+function registerServer(settings, server) {
+  settings.mcpServers ??= {};
+  const existing = settings.mcpServers.iperuranio;
+  if (existing && JSON.stringify(existing) !== JSON.stringify(server)) fail('Existing iperuranio MCP configuration differs');
+  settings.mcpServers.iperuranio = server;
+}
+
+function installNative(root: string, agent: string) {
   const [hookfile, skills, ...events] = agents[agent];
   const dest = inside(root, hookfile);
   const copilot = agent === 'copilot-cli';
-  const conf = fs.existsSync(dest) ? read(dest) : copilot ? {version: 1} : {};
+  const conf = fs.existsSync(dest) ? read(dest) : copilot || agent === 'cursor' ? {version: 1} : {};
   conf.hooks ??= {};
-  const cmd = 'node "$(git rev-parse --show-toplevel)/.iperuranio/runtime/cli.ts" hook ' + agent + ' ';
+  const cmd = agent === 'cursor' ? 'node .iperuranio/runtime/cli.ts hook cursor ' : 'node "$(git rev-parse --show-toplevel)/.iperuranio/runtime/cli.ts" hook ' + agent + ' ';
   for (const event of events) {
-    const handler = copilot ? {type: 'command', bash: cmd + event} : {hooks: [{type: 'command', command: cmd + event}]};
+    const command = cmd + event;
+    const handler = agent === 'cursor' ? {command} : copilot ? {type: 'command', bash: command} : {hooks: [{type: 'command', command}]};
     const entries = conf.hooks[event] ??= [];
     if (!entries.some(h => JSON.stringify(h) === JSON.stringify(handler))) entries.push(handler);
   }
-  const launcher = 'exec node "$(git rev-parse --show-toplevel)/.iperuranio/runtime/cli.ts" mcp';
   if (agent === 'codex') {
     const file = inside(root, '.codex/config.toml');
     const current = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
@@ -47,21 +52,47 @@ export function init(root: string, agent: string, requested?: string, auto = fal
       if (/mcp_servers[^\n]*iperuranio/.test(current)) fail('Existing iperuranio MCP configuration differs');
       put(file, current + '\n' + block);
     }
+  } else if (agent === 'gemini-cli') {
+    registerServer(conf, {command: 'sh', args: ['-c', launcher]});
   } else {
-    const file = inside(root, '.mcp.json');
+    const cursor = agent === 'cursor';
+    const file = inside(root, cursor ? '.cursor/mcp.json' : '.mcp.json');
     const m = fs.existsSync(file) ? read(file) : {};
-    m.mcpServers ??= {};
-    const server = {command: 'sh', args: ['-c', launcher]};
-    if (m.mcpServers.iperuranio && JSON.stringify(m.mcpServers.iperuranio) !== JSON.stringify(server)) fail('Existing iperuranio MCP configuration differs');
-    m.mcpServers.iperuranio = server;
+    const server = cursor
+      ? {type: 'stdio', command: 'node', args: ['${workspaceFolder}/.iperuranio/runtime/cli.ts', 'mcp', '--project', '${workspaceFolder}']}
+      : {command: 'sh', args: ['-c', launcher]};
+    registerServer(m, server);
     put(file, JSON.stringify(m, null, 2) + '\n');
   }
+  put(inside(root, skills + '/iperuranio/SKILL.md'), skill, true);
+  put(dest, JSON.stringify(conf, null, 2) + '\n');
+}
+
+function installPortable(root: string) {
+  const instructions = inside(root, 'AGENTS.md');
+  const existing = fs.existsSync(instructions) ? fs.readFileSync(instructions, 'utf8') : '';
+  const block = '<!-- iperuranio:begin -->\n## Project memory\n\n' + guidance + '<!-- iperuranio:end -->';
+  if (existing.includes(block)) return;
+  if (existing.includes('<!-- iperuranio:')) fail('Existing iperuranio instructions differ; review AGENTS.md');
+  put(instructions, existing + (existing ? '\n\n' : '') + block + '\n');
+}
+
+export function init(root: string, agent = 'generic', requested?: string, auto = false, port?: number) {
+  if (!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(agent)) fail('Use a lowercase agent identifier (letters, digits, hyphens or underscores)');
+  if (port !== undefined && (!Number.isInteger(port) || port < 1 || port > 65535)) fail('Invalid local inference port');
+  const cfg = inside(root, '.iperuranio/config.json');
+  const previous = fs.existsSync(cfg) ? read(cfg).history : undefined;
+  const history = requested || previous || '.iperuranio';
+  if (typeof history !== 'string' || history.split(/[\\/]/).some(x => !x || x === '..' || x === '.' || x === '.git') || path.isAbsolute(history)) fail('Invalid archive path');
+  if (previous && previous !== history) fail('Archive already configured');
+  inside(root, history + '/decisions');
+  const native = Object.hasOwn(agents, agent);
+  if (native) installNative(root, agent);
+  else installPortable(root);
   for (const name of ['cli.ts', 'core.ts', 'adapter.ts', 'mcp.ts', 'language.ts']) {
     put(inside(root, '.iperuranio/runtime/' + name), fs.readFileSync(fileURLToPath(new URL(name, import.meta.url)), 'utf8'));
   }
-  put(inside(root, skills + '/iperuranio/SKILL.md'), skill, true);
   put(cfg, JSON.stringify({history}, null, 2) + '\n', true);
-  put(dest, JSON.stringify(conf, null, 2) + '\n');
   const enabled = path.join(state(root), 'enabled.json');
   const prior = fs.existsSync(enabled) ? read(enabled) : {};
   put(enabled, JSON.stringify({
@@ -70,7 +101,11 @@ export function init(root: string, agent: string, requested?: string, auto = fal
     modelPort: port ?? prior.modelPort,
     autoCache: auto || prior.autoCache === true
   }));
-  return {agent, history, status: 'installed', hooks: 'verify host trust and restart'};
+  return {
+    agent, history, status: 'installed', mode: native ? 'native' : 'portable',
+    hooks: native ? 'verify host trust and restart' : 'manual event bridge',
+    mcp: {command: process.execPath, args: [inside(root, '.iperuranio/runtime/cli.ts'), 'mcp', '--project', root]}
+  };
 }
 
 export function capture(root: string, text: string, origin = 'observation') {
@@ -139,7 +174,23 @@ function transcript(root: string, agent: string, p: string) {
 }
 
 export function hook(root: string, agent: string, event: string, e: any) {
-  if (!config(root).local.agents.includes(agent) || !e.cwd || rootOf(e.cwd) !== root) return {};
+  const reply = agent === 'cursor' && event === 'beforeSubmitPrompt' ? {continue: true} : {};
+  if (!config(root).local.agents.includes(agent)) return reply;
+  const cwd = agent === 'cursor'
+    ? (e.workspace_roots?.length === 1 ? e.workspace_roots[0] : undefined)
+    : e.cwd;
+  if (typeof cwd !== 'string' || !path.isAbsolute(cwd) || rootOf(cwd) !== root) return reply;
+  if (!Object.hasOwn(agents, agent)) {
+    if (event !== 'message' || !['user', 'assistant'].includes(e.role) || typeof e.text !== 'string') fail('Expected message with role and text');
+    capture(root, e.text, e.role);
+    return reply;
+  }
+  if (agent === 'cursor' || agent === 'gemini-cli') {
+    if (event === 'beforeSubmitPrompt' || event === 'BeforeAgent') capture(root, e.prompt, 'user');
+    if (event === 'afterAgentResponse') capture(root, e.text, 'assistant');
+    if (event === 'AfterAgent') capture(root, e.prompt_response, 'assistant');
+    return reply;
+  }
   const dir = path.join(state(root), 'sessions');
   const p = e.transcript_path ?? e.transcriptPath;
   if (typeof p === 'string') put(path.join(dir, hash(agent + p) + '.json'), JSON.stringify({agent, p}));

@@ -24,7 +24,7 @@ import {
 import {init, hook} from './adapter.ts';
 import {serve, invoke} from './mcp.ts';
 
-const help = 'iperuranio init <codex|claude-code|copilot-cli> [--history-dir DIR] [--auto-cache]\nsearch QUERY [--ticket ID] [--file PATH] [--json] | show ID | history ID\nsave TEXT [--supersedes ID] | forget TEXT --reason WHY [--id ID] | save/forget --stdin\npending | review ID | doctor | mcp';
+const help = 'iperuranio init [agent-id] [--history-dir DIR] [--auto-cache]\nsearch QUERY [--ticket ID] [--file PATH] [--json] | show ID | history ID\nsave TEXT [--supersedes ID] | forget TEXT --reason WHY [--id ID] | save/forget --stdin\npending | review ID | doctor | mcp [--project DIR] | hook AGENT message';
 
 async function main() {
   const [cmd, ...args] = process.argv.slice(2);
@@ -32,9 +32,9 @@ async function main() {
     console.log(help);
     return;
   }
-  const root = rootOf();
   const {values: v, positionals: p} = parseArgs({
     args, allowPositionals: true, options: {
+      project: {type: 'string'},
       'model-port': {type: 'string'},
       'history-dir': {type: 'string'},
       'auto-cache': {type: 'boolean'},
@@ -48,7 +48,13 @@ async function main() {
       id: {type: 'string'}
     }
   });
+  const root = rootOf(v.project);
+  if (cmd === 'init' && p.length > 1) fail('Expected one agent identifier');
   if (cmd === 'init') return init(root, p[0], v['history-dir'], v['auto-cache'], v['model-port'] === undefined ? undefined : Number(v['model-port']));
+  // A teammate may pull project hooks before enrolling their own checkout.
+  if (cmd === 'hook' && !fs.existsSync(path.join(state(root), 'enabled.json'))) {
+    return p[0] === 'cursor' && p[1] === 'beforeSubmitPrompt' ? {continue: true} : {};
+  }
   const {archive, local} = config(root);
   if (cmd === 'hook') {
     const result = hook(root, p[0], p[1], JSON.parse(fs.readFileSync(0, 'utf8')));

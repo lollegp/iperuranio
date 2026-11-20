@@ -1,0 +1,214 @@
+{
+  "node": "v24.20.0",
+  "platform": "darwin",
+  "arch": "arm64",
+  "cpu": "Apple M4",
+  "encoding": "o200k_base",
+  "rounds": 5,
+  "results": [
+    {
+      "records": 50,
+      "archiveTokens": 1880,
+      "samples": 40,
+      "medianMs": 197.6,
+      "p95Ms": 373.8,
+      "top3Hits": 5,
+      "positiveQueries": 7,
+      "medianHitTokens": 57,
+      "cases": [
+        {
+          "query": "ticket",
+          "expected": "815d7d1e1de4bddf1ace0f69",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 74
+        },
+        {
+          "query": "Italian with ticket",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 54
+        },
+        {
+          "query": "file",
+          "expected": "14346c31c94d57414f2324b2",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 65
+        },
+        {
+          "query": "rejection",
+          "expected": "21f4de0f97c945ef882a7c8d",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 57
+        },
+        {
+          "query": "symbol",
+          "expected": "27b87cf5408e9a9ac2ce9983",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 54
+        },
+        {
+          "query": "broad topic",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": null,
+          "returned": 3,
+          "tokens": 168
+        },
+        {
+          "query": "paraphrase",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": null,
+          "returned": 0,
+          "tokens": 4
+        },
+        {
+          "query": "absent identifier",
+          "expected": null,
+          "rank": null,
+          "returned": 0,
+          "tokens": 4
+        }
+      ]
+    },
+    {
+      "records": 250,
+      "archiveTokens": 9440,
+      "samples": 40,
+      "medianMs": 208.2,
+      "p95Ms": 223,
+      "top3Hits": 5,
+      "positiveQueries": 7,
+      "medianHitTokens": 57,
+      "cases": [
+        {
+          "query": "ticket",
+          "expected": "815d7d1e1de4bddf1ace0f69",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 74
+        },
+        {
+          "query": "Italian with ticket",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 54
+        },
+        {
+          "query": "file",
+          "expected": "14346c31c94d57414f2324b2",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 65
+        },
+        {
+          "query": "rejection",
+          "expected": "21f4de0f97c945ef882a7c8d",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 57
+        },
+        {
+          "query": "symbol",
+          "expected": "27b87cf5408e9a9ac2ce9983",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 54
+        },
+        {
+          "query": "broad topic",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": null,
+          "returned": 3,
+          "tokens": 171
+        },
+        {
+          "query": "paraphrase",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": null,
+          "returned": 0,
+          "tokens": 4
+        },
+        {
+          "query": "absent identifier",
+          "expected": null,
+          "rank": null,
+          "returned": 0,
+          "tokens": 4
+        }
+      ]
+    },
+    {
+      "records": 1000,
+      "archiveTokens": 37790,
+      "samples": 40,
+      "medianMs": 411.4,
+      "p95Ms": 434.2,
+      "top3Hits": 5,
+      "positiveQueries": 7,
+      "medianHitTokens": 57,
+      "cases": [
+        {
+          "query": "ticket",
+          "expected": "815d7d1e1de4bddf1ace0f69",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 74
+        },
+        {
+          "query": "Italian with ticket",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 54
+        },
+        {
+          "query": "file",
+          "expected": "14346c31c94d57414f2324b2",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 65
+        },
+        {
+          "query": "rejection",
+          "expected": "21f4de0f97c945ef882a7c8d",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 57
+        },
+        {
+          "query": "symbol",
+          "expected": "27b87cf5408e9a9ac2ce9983",
+          "rank": 1,
+          "returned": 1,
+          "tokens": 54
+        },
+        {
+          "query": "broad topic",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": null,
+          "returned": 3,
+          "tokens": 177
+        },
+        {
+          "query": "paraphrase",
+          "expected": "442b6954da4bdd670bf8d81e",
+          "rank": null,
+          "returned": 0,
+          "tokens": 4
+        },
+        {
+          "query": "absent identifier",
+          "expected": null,
+          "rank": null,
+          "returned": 0,
+          "tokens": 4
+        }
+      ]
+    }
+  ]
+}

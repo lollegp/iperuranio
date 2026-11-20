@@ -59,6 +59,7 @@ export async function serve(root: string) {
       if (m.method === 'initialize') result = {
         protocolVersion: '2025-06-18',
         capabilities: {tools: {}},
+        instructions: 'Search project decisions before related edits. Open relevant records to check rationale and sources. Stage English candidates during the turn. Only a developer approves publication.',
         serverInfo: {name: 'iperuranio', version: '0.1.0'}
       };
       else if (m.method === 'ping') result = {};

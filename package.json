@@ -11,8 +11,9 @@
   },
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "lint": "oxlint --deny-warnings src bin test",
-    "check": "npm run lint && npm test"
+    "lint": "oxlint --deny-warnings src bin test benchmark",
+    "check": "npm run lint && npm test",
+    "benchmark": "node benchmark/search.mjs"
   },
   "files": [
     "bin",
@@ -20,6 +21,7 @@
     "README.md"
   ],
   "devDependencies": {
+    "gpt-tokenizer": "4.1.2",
     "oxlint": "1.94.0"
   }
 }
