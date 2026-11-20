@@ -94,7 +94,7 @@ test('standalone distribution works inside node_modules and installs its own run
   const {cwd, run} = fixture(t);
   const pkg = path.join(cwd, 'node_modules/iperuranio');
   fs.mkdirSync(pkg, {recursive: true});
-  for (const f of ['bin', 'src', 'package.json']) fs.cpSync(path.join(path.dirname(cli), '..', f), path.join(pkg, f), {recursive: true});
+  for (const f of ['bin', 'src', 'skills', 'package.json']) fs.cpSync(path.join(path.dirname(cli), '..', f), path.join(pkg, f), {recursive: true});
   run(['init', 'codex'], '', true, path.join(pkg, 'bin/iperuranio.mjs'));
   assert.deepEqual(run(['doctor'], '', true, path.join(cwd, '.iperuranio/runtime/cli.ts')).agents, ['codex']);
 });

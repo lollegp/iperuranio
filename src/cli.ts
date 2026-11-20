@@ -21,10 +21,10 @@ import {
   fail,
   sensitive
 } from './core.ts';
-import {init, hook} from './adapter.ts';
+import {init, hook, installSkill} from './adapter.ts';
 import {serve, invoke} from './mcp.ts';
 
-const help = 'iperuranio init [agent-id] [--history-dir DIR] [--auto-cache]\nsearch QUERY [--ticket ID] [--file PATH] [--json] | show ID | history ID\nsave TEXT [--supersedes ID] | forget TEXT --reason WHY [--id ID] | save/forget --stdin\npending | review ID | doctor | mcp [--project DIR] | hook AGENT message';
+const help = 'iperuranio skill install [agent-id]\niperuranio init [agent-id] [--history-dir DIR] [--auto-cache]\nsearch QUERY [--ticket ID] [--file PATH] [--json] | show ID | history ID\nsave TEXT [--supersedes ID] | forget TEXT --reason WHY [--id ID] | save/forget --stdin\npending | review ID | doctor | mcp [--project DIR] | hook AGENT message';
 
 async function main() {
   const [cmd, ...args] = process.argv.slice(2);
@@ -49,6 +49,10 @@ async function main() {
     }
   });
   const root = rootOf(v.project);
+  if (cmd === 'skill') {
+    if (p[0] !== 'install' || p.length > 2) fail('Usage: iperuranio skill install [agent-id]');
+    return installSkill(root, p[1]);
+  }
   if (cmd === 'init' && p.length > 1) fail('Expected one agent identifier');
   if (cmd === 'init') return init(root, p[0], v['history-dir'], v['auto-cache'], v['model-port'] === undefined ? undefined : Number(v['model-port']));
   // A teammate may pull project hooks before enrolling their own checkout.

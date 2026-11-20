@@ -2,7 +2,7 @@
 
 **Shared memory for teams that build with coding agents.** Your team already shares the code through Git. The reason for a change can still live in one developer’s chat. With iperuranio, a developer can review that decision, commit it alongside the code and make it discoverable from a teammate’s next agent session.
 
-[How the team shares memory](#how-the-team-shares-memory) · [Try it](#try-it) · [Privacy](#what-leaves-the-chat) · [Benchmark](#search-benchmark)
+[How the team shares memory](#how-the-team-shares-memory) · [Try it](#try-it) · [Agent skill](#use-iperuranio-as-an-agent-skill) · [Privacy](#what-leaves-the-chat) · [Benchmark](#search-benchmark)
 
 ![iperuranio. A single red triangle floats above overlapping impressions in blue and graphite, evoking the ideal Form and its material instances.](docs/images/social-preview.jpg)
 
@@ -64,6 +64,30 @@ npx --no-install iperuranio search ABC-1234
 Replace `CANDIDATE_ID` with the ID from `save`. Check the English Markdown and type `PUBLISH` to write it to `.iperuranio/decisions/`. Commit and push the reviewed file with your next change so teammates can find it too.
 
 </details>
+
+## Use iperuranio as an agent skill
+
+Install the [iperuranio skill](skills/iperuranio/SKILL.md) directly from GitHub. Run this in your project and select the coding agent that should use it:
+
+```sh
+npx skills add lollegp/iperuranio --skill iperuranio
+```
+
+The skill provides the multi-agent workflow and can read reviewed Markdown without the iperuranio runtime. If your project already has the iperuranio package installed, you can use its built-in installer instead:
+
+```sh
+npx --no-install iperuranio skill install
+```
+
+This installs `.agents/skills/iperuranio/SKILL.md` in the repository. Pass the same host ID used by `init` (for example `skill install claude-code`) to select its project skill directory. A native `init` already installs the skill. A portable `init` puts the workflow in `AGENTS.md` for clients that use repository instructions. For agents with their own skill installer, import the `skills/iperuranio` directory from this package. Reload the agent's skill list if needed.
+
+Choose **skill only** to guide agents and consult existing reviewed Markdown. Choose **init** when you also want the runtime for search, private candidates, review and supported hooks. The skill installer changes only the project's skill file.
+
+For example, give the coordinating agent this task:
+
+> Use the iperuranio skill for ABC-1234. Find the current cache decision and pass its record ID to the implementation and review agents. Have the reviewer check the rationale against the branch and test results. Stage one handoff with the changed files, verified outcome and any open question for the next developer.
+
+Workers can follow the same [workflow](skills/iperuranio/SKILL.md) directly when their host lacks skill discovery. The receiving agent can resolve a reviewed record ID in a checkout that contains the commit. Until then, pass authorized findings directly in the task handoff.
 
 ## One ticket, two decisions
 
