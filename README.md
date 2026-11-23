@@ -2,7 +2,7 @@
 
 **Shared memory for teams that build with coding agents.** Your team already shares the code through Git. The reason for a change can still live in one developer’s chat. With iperuranio, a developer can review that decision, commit it alongside the code and make it discoverable from a teammate’s next agent session.
 
-[How the team shares memory](#how-the-team-shares-memory) · [Try it](#try-it) · [Agent skill](#use-iperuranio-as-an-agent-skill) · [Privacy](#what-leaves-the-chat) · [Benchmark](#search-benchmark)
+[Website and interactive demo](https://lollegp.github.io/iperuranio/) · [Installation guide](https://lollegp.github.io/iperuranio/guide/) · [Try it](#try-it) · [Agent skill](#use-iperuranio-as-an-agent-skill) · [Privacy](#what-leaves-the-chat) · [Benchmark](#search-benchmark)
 
 ![iperuranio. A single red triangle floats above overlapping impressions in blue and graphite, evoking the ideal Form and its material instances.](docs/images/social-preview.jpg)
 

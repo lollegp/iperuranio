@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#faf8f2">
+  <title>iperuranio — Shared project memory for coding agents</title>
+  <meta name="description" content="Give coding agents access to the decisions behind your code. Review a decision once, commit it as Markdown, and let the next developer find it with any compatible agent.">
+  <link rel="canonical" href="https://lollegp.github.io/iperuranio/">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/instrument-serif.woff2">
+  <link rel="stylesheet" href="assets/style.css">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="iperuranio">
+  <meta property="og:title" content="Give your coding agents a shared memory">
+  <meta property="og:description" content="One developer's decision can answer the next developer's question. Explore the decision archive, try the skill, and bring it to your Git project.">
+  <meta property="og:url" content="https://lollegp.github.io/iperuranio/">
+  <meta property="og:image" content="https://lollegp.github.io/iperuranio/assets/social.jpg">
+  <meta property="og:image:alt" content="A red triangle floats above blue impressions of the same form beside the iperuranio wordmark.">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {"@type":"WebSite","@id":"https://lollegp.github.io/iperuranio/#website","url":"https://lollegp.github.io/iperuranio/","name":"iperuranio","inLanguage":"en"},
+      {"@type":"WebPage","@id":"https://lollegp.github.io/iperuranio/#page","url":"https://lollegp.github.io/iperuranio/","name":"iperuranio — Shared project memory for coding agents","isPartOf":{"@id":"https://lollegp.github.io/iperuranio/#website"},"mainEntity":{"@id":"https://lollegp.github.io/iperuranio/#software"},"inLanguage":"en"},
+      {"@type":["SoftwareApplication","SoftwareSourceCode"],"@id":"https://lollegp.github.io/iperuranio/#software","name":"iperuranio","url":"https://lollegp.github.io/iperuranio/","description":"A project-local skill and runtime for reviewing, sharing and retrieving technical decisions from coding-agent conversations through Git.","applicationCategory":"DeveloperApplication","runtimePlatform":"Node.js 24+","codeRepository":"https://github.com/lollegp/iperuranio","installUrl":"https://lollegp.github.io/iperuranio/guide/","softwareHelp":"https://lollegp.github.io/iperuranio/guide/"}
+    ]
+  }
+  </script>
+  <script defer src="assets/site.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="./" aria-label="iperuranio home"><img src="assets/logo.png" alt="" width="37" height="37">iperuranio</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#demo">Demo</a><a href="#benchmark">Benchmark</a><a href="guide/">Install guide</a>
+        <a class="star-link" href="https://github.com/lollegp/iperuranio"><span aria-hidden="true">☆</span> GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="intro">
+        <p class="eyebrow"><span class="mark-line" aria-hidden="true"></span> Project memory for coding agents</p>
+        <h1 id="hero-title">Give your agents<br>a <em>shared memory.</em></h1>
+        <p class="lead">iperuranio turns decisions from coding-agent chats into reviewed Markdown in your Git repo. When the next developer asks why the cache changed, their agent can find the original reasoning.</p>
+        <div class="actions"><a class="btn primary" href="guide/#skill">Install the skill <span aria-hidden="true">↗</span></a><a class="text-action" href="#demo">Explore the demo <span aria-hidden="true">↓</span></a></div>
+      </div>
+      <figure class="hero-art">
+        <img src="assets/archive.webp" width="960" height="960" fetchpriority="high" alt="A blue card drawer with three decision cards rising from the shared archive.">
+        <figcaption><span>Fig. 01</span> The decision archive</figcaption>
+      </figure>
+    </section>
+    <div class="cap-band"><div class="wrap capabilities">
+      <span class="cap"><span class="cap-symbol" aria-hidden="true">⌘</span> Lives in your Git repo</span>
+      <span class="cap"><span class="cap-symbol" aria-hidden="true">✎</span> Human-reviewed Markdown</span>
+      <span class="cap"><span class="cap-symbol" aria-hidden="true">⇄</span> Works across agents</span>
+    </div></div>
+    <section class="wrap section demo-section" id="demo" aria-labelledby="demo-title">
+      <div class="section-lede"><div><p class="eyebrow"><span class="mark-line" aria-hidden="true"></span> Interactive demo</p>
+        <h2 id="demo-title">Inside the <em>decision archive.</em></h2></div>
+        <p>Pick a question from a sample project. See what the next developer can learn from a teammate’s conversation.</p></div>
+      <div class="archive-demo">
+        <div class="archive-bar"><span><i class="live-dot" aria-hidden="true"></i> iperuranio <b>/</b> sample archive</span><span>3 questions</span></div>
+        <div class="archive-grid">
+          <nav class="questions" aria-label="Sample questions">
+            <a class="question" href="#cache" data-question="cache"><small>ABC-1250 <b>·</b> Cache</small><strong>Why five minutes?</strong><span aria-hidden="true">↗</span></a>
+            <a class="question" href="#checkout" data-question="checkout"><small>PAY-77 <b>·</b> Checkout</small><strong>Why avoid a retry?</strong><span aria-hidden="true">↗</span></a>
+            <a class="question" href="#login" data-question="login"><small>AUTH-29 <b>·</b> Login</small><strong>Why session storage?</strong><span aria-hidden="true">↗</span></a>
+          </nav>
+          <div class="records">
+            <article id="cache" class="record" tabindex="-1" aria-labelledby="cache-title">
+              <div class="record-meta"><span><i aria-hidden="true"></i> Reviewed decision</span><span>ABC-1250</span></div>
+              <h3 id="cache-title">Reduce max-age to five minutes.</h3>
+              <p>Product information stayed stale after updates. The team shortened the cache lifetime so customers would see changes sooner.</p>
+              <div class="record-foot"><strong>Earlier decision · ABC-1234</strong><p>The team had raised max-age from two to ten minutes to reduce repeat requests to the origin.</p></div>
+            </article>
+            <article id="checkout" class="record" tabindex="-1" aria-labelledby="checkout-title">
+              <div class="record-meta"><span><i aria-hidden="true"></i> Rejected alternative</span><span>PAY-77</span></div>
+              <h3 id="checkout-title">Skip the automatic retry.</h3>
+              <p>A checkout timeout can arrive after the payment succeeds. Retrying every submission could charge a customer twice.</p>
+              <div class="record-foot"><strong>What the next developer learns</strong><p>The team considered unconditional retries and recorded the duplicate-charge risk.</p></div>
+            </article>
+            <article id="login" class="record" tabindex="-1" aria-labelledby="login-title">
+              <div class="record-meta"><span><i aria-hidden="true"></i> Open question</span><span>AUTH-29</span></div>
+              <h3 id="login-title">The storage reason is unknown.</h3>
+              <p>The login API reads its token from <code>sessionStorage</code>. The team found no historical explanation for choosing it over <code>localStorage</code>.</p>
+              <div class="record-foot"><strong>What the next developer learns</strong><p>The implementation is known. Anyone proposing a storage change still needs to verify the reason.</p></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="workflow"><div class="wrap section">
+      <p class="eyebrow"><span class="mark-line" aria-hidden="true"></span> How it works</p>
+      <h2>From one chat to <em>the whole team.</em></h2>
+      <div class="steps">
+        <div><span class="step-label">01 / Capture</span><h3>Keep the reasoning.</h3><p>A compatible hook stages a decision while the conversation happens. Agents can also stage it through the CLI or MCP.</p></div>
+        <div><span class="step-label">02 / Review</span><h3>Choose what travels.</h3><p>A developer checks the English record for accuracy and sensitive details, then commits the Markdown alongside the code.</p></div>
+        <div><span class="step-label">03 / Retrieve</span><h3>Ask from another agent.</h3><p>A teammate pulls the branch and searches by ticket, file or symbol. The record shows the decision, its reason and any linked revision.</p></div>
+      </div>
+    </div></section>
+    <section id="benchmark" class="wrap section benchmark" aria-labelledby="benchmark-title">
+      <div class="section-lede"><div><p class="eyebrow"><span class="mark-line" aria-hidden="true"></span> Search benchmark</p>
+        <h2 id="benchmark-title">How much context <em>does it take?</em></h2></div>
+        <p>Searching for ticket ABC-1234 returned one compact result in a synthetic archive of 1,000 records.</p></div>
+      <div class="metrics">
+        <div><strong>74</strong><span>output tokens for the ticket lookup</span></div>
+        <div><strong>37,790</strong><span>tokens in the full archive</span></div>
+        <div><strong>411 <small>ms</small></strong><span>median search time across 40 calls</span></div>
+      </div>
+      <p class="bench-note">Apple M4 · Node.js 24.20 · o200k_base tokenizer. Five of seven positive queries found their expected record in the top three. A broad cache query and a paraphrase missed it. Token counts measure CLI output.</p>
+      <a class="text-action" href="https://github.com/lollegp/iperuranio/tree/main/benchmark">Inspect the benchmark and fixtures <span aria-hidden="true">↗</span></a>
+    </section>
+    <section class="closing"><div class="wrap closing-inner">
+      <div><p class="eyebrow">Start with one repository</p><h2>Give the next developer<br><em>the backstory.</em></h2></div>
+      <div class="install-box"><p>Install the agent skill in your project</p><pre><code id="install-cmd">npx skills add lollegp/iperuranio --skill iperuranio</code></pre>
+        <div class="install-actions"><button hidden class="copy" type="button" data-copy>Copy command</button><span role="status" class="copy-status"></span><a href="guide/">Full installation guide <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </div></section>
+  </main>
+  <footer class="site-footer"><div class="wrap">
+    <a class="brand" href="./"><img src="assets/logo.png" alt="" width="30" height="30">iperuranio</a>
+    <nav aria-label="Footer"><a href="guide/#faq">FAQ</a><a href="sitemap.xml">Sitemap</a><a href="https://github.com/lollegp/iperuranio">Star on GitHub <span aria-hidden="true">↗</span></a></nav>
+  </div></footer>
+</body>
+</html>

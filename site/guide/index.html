@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Install iperuranio and share your first decision</title>
+  <meta name="description" content="Install the iperuranio agent skill or project runtime. Review a decision, share it through Git and retrieve the rationale from another coding agent.">
+  <link rel="canonical" href="https://lollegp.github.io/iperuranio/guide/">
+  <link rel="icon" type="image/png" href="../assets/logo.png">
+  <link rel="stylesheet" href="../assets/style.css">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="iperuranio">
+  <meta property="og:title" content="Install iperuranio and share your first decision">
+  <meta property="og:description" content="Choose a standalone agent skill or a project runtime, then take one technical decision from private draft to shared Markdown.">
+  <meta property="og:url" content="https://lollegp.github.io/iperuranio/guide/">
+  <meta property="og:image" content="https://lollegp.github.io/iperuranio/assets/social.jpg">
+  <meta property="og:image:alt" content="The iperuranio wordmark and its geometric illustration of an ideal form.">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": "https://lollegp.github.io/iperuranio/guide/#article",
+        "url": "https://lollegp.github.io/iperuranio/guide/",
+        "headline": "Install iperuranio and share your first decision",
+        "description": "Install the standalone skill or enroll a Git checkout, review your first decision and share it with another coding agent.",
+        "inLanguage": "en",
+        "about": {"@type": "SoftwareApplication", "name": "iperuranio", "url": "https://lollegp.github.io/iperuranio/", "applicationCategory": "DeveloperApplication"},
+        "isPartOf": {"@type": "WebSite", "name": "iperuranio", "url": "https://lollegp.github.io/iperuranio/"}
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "iperuranio", "item": "https://lollegp.github.io/iperuranio/"},
+          {"@type": "ListItem", "position": 2, "name": "Installation guide", "item": "https://lollegp.github.io/iperuranio/guide/"}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to guide</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="../"><img src="../assets/logo.png" alt="" width="32" height="32">iperuranio</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="../#demo">Demo</a>
+        <a href="../#benchmark">Benchmark</a>
+        <a href="./" aria-current="page">Install guide</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap guide" id="main">
+    <article class="prose">
+      <h1>Install iperuranio</h1>
+      <p class="lead">Use the skill to teach an agent how to work with your team’s decisions. Add the runtime when you want searchable records, private drafts and capture during a conversation.</p>
+      <nav class="guide-toc" aria-label="On this page">
+        <a href="#skill">Agent skill</a>
+        <a href="#runtime">Project runtime</a>
+        <a href="#first-decision">First decision</a>
+        <a href="#faq">Questions</a>
+      </nav>
+
+      <section id="skill" aria-labelledby="skill-heading">
+        <h2 id="skill-heading">Install the agent skill</h2>
+        <p>Run the skills installer from the Git project where the team works. It downloads the workflow from the public iperuranio repository on GitHub.</p>
+        <pre><code>npx skills add https://github.com/lollegp/iperuranio.git --skill iperuranio</code></pre>
+        <p>Choose your agent when prompted. The skill can guide a handoff or read reviewed Markdown already present on the branch. Try this request in an agent session.</p>
+        <blockquote>Use iperuranio to find the decision for ABC-1234. Give the reviewer the record ID, its rationale and the files they should check.</blockquote>
+        <p>If the checkout has no decision for that ticket yet, the agent should tell you. To start recording decisions, install the runtime below.</p>
+      </section>
+
+      <section id="runtime" aria-labelledby="runtime-heading">
+        <h2 id="runtime-heading">Install the project runtime</h2>
+        <p>You need Git, Node.js 24 or later, npm and a POSIX shell. In the project root, install the development dependency and enroll this checkout.</p>
+        <pre><code>npm install --save-dev git+https://github.com/lollegp/iperuranio.git
+npx --no-install iperuranio init
+npx --no-install iperuranio doctor</code></pre>
+        <p>Plain <code>init</code> adds the workflow to <code>AGENTS.md</code> and prints a local MCP launcher. For supported host hooks, run <code>init</code> with your agent’s identifier, such as <code>npx --no-install iperuranio init codex</code>. Each teammate enrolls their own checkout. Inspect the generated project files, reload the agent and approve its project hooks.</p>
+        <p>Supported adapter IDs are <code>codex</code>, <code>claude-code</code>, <code>copilot-cli</code>, <code>cursor</code> and <code>gemini-cli</code>. An agent that can execute shell commands can use the CLI directly.</p>
+      </section>
+
+      <section id="first-decision" aria-labelledby="first-heading">
+        <h2 id="first-heading">Share your first decision</h2>
+        <p>Try this sample in a test checkout. Save the choice and the reason someone else might need later.</p>
+        <pre><code>npx --no-install iperuranio save "Reduce max-age to 5 minutes." \
+  --reason "Product information stayed stale after updates." --ticket ABC-1250</code></pre>
+        <p><code>save</code> returns a private candidate ID. Substitute it below. Check the exact English text, then type <code>PUBLISH</code> in the review prompt to create the Markdown file in your working tree.</p>
+        <pre><code>npx --no-install iperuranio review CANDIDATE_ID
+npx --no-install iperuranio search ABC-1250</code></pre>
+        <p>Commit the reviewed file under <code>.iperuranio/decisions/</code> and push the branch through your team’s normal review process. A teammate who pulls that commit can ask their agent why the cache lifetime changed. For later revisions, <code>history RECORD_ID</code> follows linked records.</p>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Questions teams ask</h2>
+        <h3>Does iperuranio share our original chats?</h3>
+        <p>The shared archive contains reviewed Markdown records. Private candidates stay outside Git on the developer’s device. Capture filters common credentials and email addresses. The developer checks confidential details and whether the wording still reflects the conversation before publication. Everyone who can read the Git repository can read its committed decisions.</p>
+        <h3>Can teammates discuss a decision in different languages?</h3>
+        <p>Yes. The skill asks agents to draft records in English. Teams can also configure a local model for extraction and a second check against the source. During review, compare names of code symbols, quantities, conditions and uncertainties with the original discussion. Publish when the English record preserves the meaning.</p>
+        <h3>Can our agents find each other’s work across branches?</h3>
+        <p>Each agent searches its local checkout. A teammate can retrieve a record once their branch contains the commit that added it. A private candidate ID belongs to its original checkout. Pass a reviewed record ID and commit to another agent when handing off a task.</p>
+        <h3>How do I connect an MCP client?</h3>
+        <p>Run <code>init</code> in the target checkout. Register the <code>command</code> and <code>args</code> from its <code>mcp</code> object as a local stdio server named <code>iperuranio</code>. Keep these machine-specific paths in the client’s local settings. The server provides tools for search, explanations, history, handoffs, challenges and staging candidates.</p>
+        <h3>Will a decision survive an abandoned chat?</h3>
+        <p>Supported hooks process delivered messages while the session runs. Some adapters can also replay unread entries from an available local transcript. The host’s events and transcript retention determine what can be recovered. A skill-only setup relies on instructions. Automatic capture requires a compatible event integration.</p>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <a class="brand" href="../"><img src="../assets/logo.png" alt="" width="30" height="30">iperuranio</a>
+      <nav aria-label="Footer"><a href="https://github.com/lollegp/iperuranio">Star on GitHub</a> <a href="../sitemap.xml">Sitemap</a></nav>
+    </div>
+  </footer>
+</body>
+</html>

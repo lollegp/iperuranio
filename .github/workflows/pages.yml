@@ -1,0 +1,66 @@
+name: Publish iperuranio website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-iperuranio-to-personal-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check Pages deployment credential
+        env:
+          PAGES_DEPLOY_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+        run: |
+          if [[ -z "$PAGES_DEPLOY_TOKEN" ]]; then
+            echo "::error::Set PAGES_DEPLOY_TOKEN with Contents read/write access to lollegp/lollegp.github.io."
+            exit 1
+          fi
+
+      - name: Check out website
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: source
+          persist-credentials: false
+
+      - name: Check out personal Pages repository
+        uses: actions/checkout@v4
+        with:
+          repository: lollegp/lollegp.github.io
+          ref: main
+          path: destination
+          token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+
+      - name: Sync public website
+        run: |
+          test -s source/site/index.html
+          mkdir -p destination/iperuranio
+          rsync -r --delete source/site/ destination/iperuranio/
+
+      - name: Publish to the project subdirectory
+        working-directory: destination
+        run: |
+          git add -- iperuranio
+          if git diff --cached --quiet; then
+            echo "The published website is already current."
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          source_sha=$(git -C ../source rev-parse --short HEAD)
+          git commit -m "docs: publish iperuranio website ($source_sha)"
+          git push origin HEAD:main
