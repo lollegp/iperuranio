@@ -52,6 +52,6 @@ if (copyButton && command && status) {
       }
       selection.removeAllRanges();
     }
-    status.textContent = 'Copied!';
+    status.textContent = 'Copied';
   });
 }
