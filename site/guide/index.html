@@ -54,16 +54,21 @@
     </div>
   </header>
   <main class="wrap guide" id="main">
-    <article class="prose">
+    <div class="guide-intro">
       <h1>Install iperuranio</h1>
       <p class="lead">Install the skill to read decisions already on your branch. Add the runtime to search by ticket, draft new records and capture decisions through supported agent hooks.</p>
+
+
+    </div>
+    <div class="guide-layout">
       <nav class="guide-toc" aria-label="On this page">
+        <strong>In this guide</strong>
         <a href="#skill">Agent skill</a>
         <a href="#runtime">Project runtime</a>
         <a href="#first-decision">First decision</a>
         <a href="#faq">Questions</a>
       </nav>
-
+    <article class="prose">
       <section id="skill" aria-labelledby="skill-heading">
         <h2 id="skill-heading">Install the agent skill</h2>
         <p>From the root of your Git project, run the installer and choose your coding agent.</p>
@@ -109,6 +114,7 @@ npx --no-install iperuranio search ABC-1250</code></pre>
         <p>Supported hooks process delivered messages while the session runs. Some adapters can also replay unread entries from an available local transcript. The host’s events and transcript retention determine what can be recovered. A skill-only setup relies on instructions. Automatic capture requires a compatible event integration.</p>
       </section>
     </article>
+    </div>
   </main>
   <footer class="site-footer">
     <div class="wrap">

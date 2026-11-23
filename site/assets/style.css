@@ -180,3 +180,34 @@ h2 { font-size: clamp(3.1rem, 5.35vw, 5rem); line-height: 1.02; letter-spacing: 
   .metrics div + div { padding-left: 7px; }
   .actions { gap: 13px; }
 }
+
+/* Keep the guide index available while reading a long installation example. */
+.guide-intro { max-width: 52rem; }
+.guide-intro .lead { margin-top: 20px; max-width: 42rem; }
+.guide-layout { display: grid; grid-template-columns: minmax(150px, 1fr) minmax(0, 3fr); gap: clamp(24px, 6vw, 80px); margin-top: 40px; align-items: start; }
+.guide-layout .prose { width: 100%; margin: 0; max-width: 72ch; }
+.guide-layout .prose section:first-child { margin-top: 0; }
+.guide-toc { position: sticky; top: 24px; display: grid; gap: 0; margin: 0; padding: 12px 0; }
+.guide-toc strong { color: var(--ink); margin-bottom: 8px; }
+.guide-toc a, .nav a, .install-actions a, .site-footer nav a, .actions a { display: inline-flex; align-items: center; min-height: 44px; }
+.guide-toc a { color: var(--copy); text-decoration: none; }
+.guide-toc a:hover { color: var(--blue); text-decoration: underline; }
+.copy { min-height: 44px; }
+section[id], .record { scroll-margin-top: 24px; }
+.question[aria-current] { background: #dde3ec; box-shadow: inset 3px 0 var(--blue); }
+.question[aria-current] strong { color: var(--blue); }
+.archive-bar { font-size: .84rem; }
+@media (max-width: 700px) {
+  .hero h1 { font-size: clamp(3.2rem, 11.5vw, 4.9rem); }
+  .hero-art { width: min(78%, 290px); }
+  .guide-layout { display: block; margin-top: 24px; }
+  .guide-toc { position: static; grid-template-columns: 1fr 1fr; margin-bottom: 32px; }
+  .guide-toc strong { grid-column: 1 / -1; }
+  .site-header .wrap { gap: 0 16px; }
+}
+@media (max-width: 480px) {
+  .metrics { grid-template-columns: 1fr; padding: 0; }
+  .metrics div, .metrics div + div { grid-template-columns: 7rem 1fr; align-items: center; padding: 12px 0; border-left: 0; }
+  .metrics div + div { border-top: 1px solid var(--line); }
+  .metrics span { font-size: .9rem; }
+}
